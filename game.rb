@@ -81,11 +81,17 @@ module MasterMind
       loop do
         guess = gets.chomp.downcase
 
-        COLOR_CHOICES.any? == guess ? player_guess.push(guess) : puts "Not one of the choices, try again"
+        if COLOR_CHOICES.any? == guess
+          player_guess.push(guess)
+        else
+          puts "Not one of the choices, try again"
+        end #if statement
+
+
         if player_guess.length == 4
           puts "Your guesses #{player_guess.join('')}"
           return
-        end
+        end #if Statement
       end #end loop
 
       player_guess_text_to_color(player_guess)
