@@ -14,7 +14,7 @@ module MasterMind
   class Game
     attr_reader :player_guess
     player_guess = []
-    def initialize(player)
+    def initialize(string_colors)
       temp_color_choice = []
       temp_color_choice[0] = "  ".bg_red
       temp_color_choice[1] = "  ".bg_green
@@ -137,4 +137,5 @@ include MasterMind
 
 puts "Welcome to Master Mind"
 puts "What is your name?"
-Game.new( Player.new(gets.chomp) ).play
+instance = String.new
+Game.new(instance).play
