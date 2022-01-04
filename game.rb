@@ -26,7 +26,8 @@ module MasterMind
 
       computer_cipher_sequence = []
       4.times { |i| computer_cipher_sequence.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
-    end #end Game
+    end #end initialize
+  end #end Game class
 
     def play
       loop do
@@ -45,7 +46,8 @@ module MasterMind
         else
           turns - 1
           puts "#{turns} turn(s) left"
-        end
+        end # if statement
+      end # loop do
 
         feedback(player_guess)
     end #end play
