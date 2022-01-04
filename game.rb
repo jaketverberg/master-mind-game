@@ -112,12 +112,17 @@ module MasterMind
 
     def initialize (name)
       @name = name
-    end
+    end #initialize
 
-  end
+  end #Player Class
 
   class ComputerPlayer
-  end
+  end #ComputerPlayer
+
+end #MasterMind Module
+
+include MasterMind
 
 puts "Welcome to Master Mind"
 puts "What is your name?"
+Game.new( Player.new(gets.chomp) ).play
