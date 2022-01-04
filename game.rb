@@ -100,16 +100,20 @@ module MasterMind
     end #player_guess_sequence
 
     def player_guess_text_to_color(guesses)
-      guesses = guesses.each_with_index.map do |text_color|
+      guesses.map! do |text_color|
         case text_color
         when "red"
           text_color = "  ".bg_red
         when "green"
           text_color = "  ".bg_green
-        when "blue" = "  ".bg_blue
-        when "magenta" = "  ".bg_magenta
-        when "cyan" = "  ".bg_cyan
-        when "white" = "  ".bg_white
+        when "blue"
+          text_color = "  ".bg_blue
+        when "magenta"
+          text_color = "  ".bg_magenta
+        when "cyan"
+          text_color = "  ".bg_cyan
+        when "white"
+          text_color = "  ".bg_white
         end #end case
       end #map! do
     end #end player_guess_text_to_color
