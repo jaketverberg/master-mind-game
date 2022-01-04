@@ -9,7 +9,7 @@ module MasterMind
     def bg_magenta;     "\e[45m#{self}\e[0m" end
     def bg_cyan;        "\e[46m#{self}\e[0m" end
     def bg_white;       "\e[47m#{self}\e[0m" end
-  end
+  end #String class
 
   class Game
     attr_reader :player_guess
@@ -27,7 +27,6 @@ module MasterMind
       computer_cipher_sequence = []
       4.times { |i| computer_cipher_sequence.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
     end #end initialize
-  end #end Game class
 
     def play
       loop do
