@@ -13,7 +13,7 @@ module MasterMind
 
   class Game
     attr_reader :player_guess
-
+    @player_guess = []
     def initialize(player)
       temp_color_choice = []
       temp_color_choice[0] = "  ".bg_red
