@@ -47,27 +47,26 @@ module MasterMind
           puts "#{turns} turn(s) left"
         end
 
-        feedback()
-
-
-        #for each color in computer_cipher_sequence
-          #if color matches computer_cipher_sequence.color
-            #feedback + red
-          #else if color matches.any computer_cipher_sequence BUT NOT INDEX
-            #feedback + white
-          #else if color doesn't match.any? or index or computer_cipher_sequence
-            #feedback + blank
-
+        feedback(@player_guess)
     end #end play
 
     def feedback(@player_guess)
+      displayed_feedback = []
       #for each color in computer_cipher_sequence
-          #if color matches computer_cipher_sequence.color
-            #feedback + red
-          #else if color matches.any computer_cipher_sequence BUT NOT INDEX
-            #feedback + white
-          #else if color doesn't match.any? or index or computer_cipher_sequence
-            #feedback + blank
+      computer_cipher_sequence.each_with_index do |color, index|
+        @player_guess.each do |guess|
+
+          if guess == color
+            displayed_feedback.push("  ".bg_red)
+          elsif computer_cipher_sequence.any? { |x| x == guess } && guess != color
+            displayed_feedback.push("  ".bg_white)
+          else
+            displayed_feedback.push("  ")
+          end #end if statement
+        end #end @player_guess.each
+      end #end each computer_cipher_sequence
+
+      puts "#{displayed_feedback.join('')}"
     end #end feedback
 
     def player_has_won?
