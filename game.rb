@@ -13,7 +13,7 @@ module MasterMind
 
   class Game
     attr_reader :player_guess
-    @player_guess = []
+    player_guess = []
     def initialize(player)
       temp_color_choice = []
       temp_color_choice[0] = "  ".bg_red
@@ -31,12 +31,12 @@ module MasterMind
     def play
       loop do
         #player selects their choices
-        @player_guess = []
+        player_guess = []
         player_guess_sequence()
 
         if player_has_won?
           puts "#{player.name} won! Way to go!"
-          puts @player_guess
+          puts player_guess
           return
         elsif
           turn == 0
@@ -47,14 +47,14 @@ module MasterMind
           puts "#{turns} turn(s) left"
         end
 
-        feedback(@player_guess)
+        feedback(player_guess)
     end #end play
 
-    def feedback(@player_guess)
+    def feedback(player_guess)
       displayed_feedback = []
       #for each color in computer_cipher_sequence
       computer_cipher_sequence.each_with_index do |color, index|
-        @player_guess.each do |guess|
+        player_guess.each do |guess|
 
           if guess == color
             displayed_feedback.push("  ".bg_red)
@@ -63,14 +63,14 @@ module MasterMind
           else
             displayed_feedback.push("  ")
           end #end if statement
-        end #end @player_guess.each
+        end #end player_guess.each
       end #end each computer_cipher_sequence
 
       puts "#{displayed_feedback.join('')}"
     end #end feedback
 
     def player_has_won?
-      computer_cipher_sequence == @player_guess ? true : false
+      computer_cipher_sequence == player_guess ? true : false
     end #end player_has_won?
 
     def player_guess_sequence()
@@ -81,14 +81,14 @@ module MasterMind
       loop do
         guess = gets.chomp.downcase
 
-        COLOR_CHOICES.any? == guess ? @player_guess.push(guess) : puts "Not one of the choices, try again"
-        if @player_guess.length == 4
-          puts "Your guesses #{@player_guess.join('')}"
+        COLOR_CHOICES.any? == guess ? player_guess.push(guess) : puts "Not one of the choices, try again"
+        if player_guess.length == 4
+          puts "Your guesses #{player_guess.join('')}"
           return
         end
       end #end loop
 
-      player_guess_text_to_color(@player_guess)
+      player_guess_text_to_color(player_guess)
     end #player_guess_sequence
 
     def player_guess_text_to_color(guesses)
