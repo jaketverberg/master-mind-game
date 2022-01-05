@@ -34,19 +34,24 @@ module MasterMind
       @player = player
       @turns = 12
       @computer_cipher_sequence = []
-      temp_color_choice = []
-      temp_color_choice[0] = '  '.bg_red
-      temp_color_choice[1] = '  '.bg_green
-      temp_color_choice[2] = '  '.bg_blue
-      temp_color_choice[3] = '  '.bg_magenta
-      temp_color_choice[4] = '  '.bg_cyan
-      temp_color_choice[5] = '  '.bg_white
+      choose_sequence(@computer_cipher_sequence)
+      temp_color_choice = ['  '.bg_red,
+                           '  '.bg_green,
+                           '  '.bg_blue,
+                           '  '.bg_magenta,
+                           '  '.bg_cyan,
+                           '  '.bg_white]
 
       4.times { @computer_cipher_sequence.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
     end
     attr_reader :player
 
+    def choose_sequence(cipher)
+      4.time { cipher.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
+    end
+
     def play
+      puts "You have #{@turns} turns to guess the cipher"
       loop do
         player.guesses = []
         puts "#{player.name} pick 4 choices one at a time by typing from the selections below."
