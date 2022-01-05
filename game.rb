@@ -25,6 +25,10 @@ module MasterMind
     "\e[47m#{self}\e[0m"
   end
 
+  def black
+    "\e[30m#{self}\e[0m"
+  end
+
   class Game
     def initialize(player)
       @player = player
@@ -46,17 +50,22 @@ module MasterMind
       loop do
         player.guesses = []
         puts "#{player.name} pick 4 choices one at a time by typing from the selections below."
-        COLOR_CHOICES.each { |color| puts color }
+        puts ['red'.bg_red,
+              'green'.bg_green,
+              'blue'.bg_blue,
+              'magenta'.bg_magenta,
+              'cyan'.bg_cyan,
+              'white'.bg_white.black].join(' ')
         puts "** type your choice like so - 'Red' **"
         player_guess_sequence
 
         if player_has_won?
-          puts "#{player.name} won! Way to go!"
-          puts player.guesses
-          return
+          puts "You guessed the cipher #{player.name}! Way to go!"
+          puts player.guesses.join
+          break
         elsif @turns.zero?
           puts 'Out of turns! You lost.'
-          return
+          break
         else
           @turns -= 1
           puts "Solid attempt. You have #{@turns} turn(s) left"
@@ -66,20 +75,18 @@ module MasterMind
     end
 
     def feedback(player_guess)
-      displayed_feedback = []
+      displayed_feedback = [' 1 ', ' 2 ', ' 3 ', ' 4 ']
       @computer_cipher_sequence.each_with_index do |color, index|
-        player_guess.each do |guess|
-          if guess == color
-            displayed_feedback.push('  '.bg_red)
-          elsif @computer_cipher_sequence.any? { |cipher_color| cipher_color == guess && guess != index }
-            displayed_feedback.push('  '.bg_white)
-          else
-            displayed_feedback.push('  ')
-          end
+        if player_guess[index] == color
+          displayed_feedback[index] = displayed_feedback[index].bg_red
+          next
+        elsif @computer_cipher_sequence.any? { |cipher_color| cipher_color == player_guess[index] }
+          displayed_feedback[index] = displayed_feedback[index].bg_white.black
+          next
         end
       end
-
-      puts "#{displayed_feedback.join}"
+      puts "Your Guesses: #{player.guesses.join}"
+      puts "Feedback: #{displayed_feedback.join}"
     end
 
     def player_has_won?
@@ -122,11 +129,9 @@ module MasterMind
         player.guesses.push(player_guess_text_to_color(guess))
       else
         puts 'Not one of the choices, try again'
-        return
       end
 
       if player.guesses.length == 4
-        puts "Your guesses #{player.guesses.join}"
         return
       end
     end
