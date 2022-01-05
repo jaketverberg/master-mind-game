@@ -29,8 +29,6 @@ module MasterMind
   end
 
   class Game
-
-    player_guess = []
     def initialize(string_colors)
       temp_color_choice = []
       temp_color_choice[0] = '  '.bg_red
@@ -47,13 +45,15 @@ module MasterMind
 
     def play
       loop do
-        # player selects their choices
-        player_guess = []
+        new_player.guesses = []
+        puts "#{new_player.name} pick 4 choices one at a time by typing from the selections below."
+        COLOR_CHOICES.each { |color| puts color }
+        puts "** type your choice like so - 'Red' **"
         player_guess_sequence
 
         if player_has_won?
-          puts "#{player.name} won! Way to go!"
-          puts player_guess
+          puts "#{new_player.name} won! Way to go!"
+          puts new_player.guesses
           return
         elsif turns.zero?
           puts 'Out of turns! You lost.'
@@ -64,7 +64,7 @@ module MasterMind
         end
       end
 
-      feedback(player_guess)
+      feedback(new_player.guesses)
     end
 
     def feedback(player_guess)
@@ -87,31 +87,26 @@ module MasterMind
     end
 
     def player_has_won?
-      computer_cipher_sequence == player_guess
+      computer_cipher_sequence == new_player.guesses
     end
 
-    def player_guess_sequence()
-      puts "#{player.name} pick 4 choices one at a time by typing from the selections below."
-      COLOR_CHOICES.each { |color| puts color }
-      puts "** type your choice like so - 'Red' **"
-
+    def player_guess_sequence
       loop do
         guess = gets.chomp.downcase
 
         if COLOR_CHOICES.any? == guess
-          player_guess.push(guess)
+          new_player.guesses.push(guess)
         else
           puts 'Not one of the choices, try again'
         end
 
+        player_guess_text_to_color(new_player.guesses)
 
         if player_guess.length == 4
-          puts "Your guesses #{player_guess.join('')}"
+          puts "Your guesses #{new_player.guesses.join('')}"
           return
         end
       end
-
-      player_guess_text_to_color(player_guess)
     end
 
     def player_guess_text_to_color(guesses)
@@ -132,14 +127,15 @@ module MasterMind
         end
       end
     end
-
   end
 
   class Player
     attr_reader :name
+    attr_accessor :guesses
 
-    def initialize (name)
+    def initialize(name, guesses)
       @name = name
+      @guesses = guesses
     end
   end
 
@@ -151,5 +147,9 @@ include MasterMind
 
 puts 'Welcome to Master Mind'
 puts 'What is your name?'
+player_name = gets.chomp
+
+new_player = Player.new(player_name, [])
+
 instance = String.new
 Game.new(instance).play
