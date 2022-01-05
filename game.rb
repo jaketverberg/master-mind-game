@@ -1,5 +1,5 @@
 module MasterMind
-  COLOR_CHOICES = [['red'], ['green'], ['blue'], ['magenta'], ['cyan'], ['white']]
+  COLOR_CHOICES = [['red'], ['green'], ['blue'], ['magenta'], ['cyan'], ['white']].freeze
   turns = 12
 
   class String
