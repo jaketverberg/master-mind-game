@@ -34,20 +34,18 @@ module MasterMind
       @player = player
       @turns = 12
       @computer_cipher_sequence = []
-      choose_sequence(@computer_cipher_sequence)
       temp_color_choice = ['  '.bg_red,
                            '  '.bg_green,
                            '  '.bg_blue,
                            '  '.bg_magenta,
                            '  '.bg_cyan,
                            '  '.bg_white]
-
-      4.times { @computer_cipher_sequence.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
+      choose_sequence(temp_color_choice, @computer_cipher_sequence)
     end
     attr_reader :player
 
-    def choose_sequence(cipher)
-      4.time { cipher.push(temp_color_choice.delete_at(rand(temp_color_choice.length))) }
+    def choose_sequence(colors, cipher)
+      4.times { cipher.push(colors.delete_at(rand(colors.length))) }
     end
 
     def play
@@ -61,15 +59,15 @@ module MasterMind
               'magenta'.bg_magenta,
               'cyan'.bg_cyan,
               'white'.bg_white.black].join(' ')
-        puts "** type your choice like so - 'Red' **"
+        puts "** type your choice one at a time like so - 'red' + enter **"
         player_guess_sequence
 
-        if player_has_won?
+        if @turns.zero?
+          puts 'Out of turns! You lost.'
+          break
+        elsif player_has_won?
           puts "You guessed the cipher #{player.name}! Way to go!"
           puts player.guesses.join
-          break
-        elsif @turns.zero?
-          puts 'Out of turns! You lost.'
           break
         else
           @turns -= 1
