@@ -49,10 +49,10 @@ module MasterMind
     end
 
     def play
-      puts "You have #{@turns} turns to guess the cipher"
+      puts "You have #{@turns} turns to guess the cipher."
       loop do
         player.guesses = []
-        puts "#{player.name} pick 4 choices one at a time by typing from the selections below."
+        puts "#{player.name} pick 4 choices one at a time by typing from the selections below. There are no duplicate colors."
         puts ['red'.bg_red,
               'green'.bg_green,
               'blue'.bg_blue,
