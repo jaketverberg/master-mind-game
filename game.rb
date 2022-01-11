@@ -93,8 +93,8 @@ module MasterMind
         end
       else
         puts 'What cipher do you choose?'
-        puts "#{player.name} pick 4 choices one at a time by typing from the selections below.
-          Do not pick duplicate colors."
+        puts "#{player.name} pick 4 choices one at a time by typing from the selections below."
+        puts 'Duplicates are allowed'
         puts ['red'.bg_red,
               'green'.bg_green,
               'blue'.bg_blue,
