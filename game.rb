@@ -117,9 +117,24 @@ module MasterMind
             @turns -= 1
             puts "Computer guessed #{computer_player.guesses.join}"
             puts "Computer has #{@turns} attempt(s) left"
+            if player.cipher.any?(computer_player.guesses)
+              computer_player.guesses.each_with_index do |guess, index|
+                if color == player.cipher[index]
+                  next
+                else
+                  computer_player.guesses[index] = new_color_picker(computer_player.guesses[index])
+                end
+              end
+            end
           end
         end
       end
+    end
+
+    def new_color_picker(change_me)
+      choices = @temp_color_choice.clone
+      choices.delete(change_me)
+      choices.sample
     end
 
     def feedback(player_guess)
