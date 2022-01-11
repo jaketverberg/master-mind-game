@@ -30,29 +30,71 @@ module MasterMind
   end
 
   class Game
-    def initialize(player)
+    def initialize(player, computer)
       @player = player
+      @computer_player = computer
       @turns = 12
+      @player_mastermind = false
       @computer_cipher_sequence = []
-      temp_color_choice = ['  '.bg_red,
+      @human_cipher_sequence = []
+      @temp_color_choice = ['  '.bg_red,
                            '  '.bg_green,
                            '  '.bg_blue,
                            '  '.bg_magenta,
                            '  '.bg_cyan,
                            '  '.bg_white]
-      choose_sequence(temp_color_choice, @computer_cipher_sequence)
-    end
-    attr_reader :player
+      loop do
+        puts 'Do you want to play as the Mastermind? Y/N'
+        answer = gets.chomp.upcase
+        if answer == 'Y'
+          @player_mastermind = true
+          break
+        elsif answer == 'N'
+          @player_mastermind = false
+          break
+        else
+          puts 'Not an answer, please type either "Y" or "N"'
+        end
+      end
 
-    def choose_sequence(colors, cipher)
-      4.times { cipher.push(colors.delete_at(rand(colors.length))) }
+      computer_player.comp_choose_sequence(@temp_color_choice, @computer_cipher_sequence)
     end
+    attr_reader :player, :computer_player
 
     def play
-      puts "You have #{@turns} turns to guess the cipher."
-      loop do
-        player.guesses = []
-        puts "#{player.name} pick 4 choices one at a time by typing from the selections below. There are no duplicate colors."
+      unless @player_mastermind
+        puts "You have #{@turns} turns to guess the cipher."
+
+        loop do
+          player.guesses = []
+          puts "#{player.name} pick 4 choices one at a time by typing from the selections below.
+          There are no duplicate colors."
+          puts ['red'.bg_red,
+                'green'.bg_green,
+                'blue'.bg_blue,
+                'magenta'.bg_magenta,
+                'cyan'.bg_cyan,
+                'white'.bg_white.black].join(' ')
+          puts "** type your choice one at a time like so - 'red' + enter **"
+          player_guess_sequence
+
+          if @turns.zero?
+            puts 'Out of turns! You lost.'
+            break
+          elsif player_has_won?
+            puts "You guessed the cipher #{player.name}! Way to go!"
+            puts player.guesses.join
+            break
+          else
+            @turns -= 1
+            puts "Solid attempt. You have #{@turns} turn(s) left"
+            feedback(player.guesses)
+          end
+        end
+      else
+        puts 'What cipher do you choose?'
+        puts "#{player.name} pick 4 choices one at a time by typing from the selections below.
+          Do not pick duplicate colors."
         puts ['red'.bg_red,
               'green'.bg_green,
               'blue'.bg_blue,
@@ -60,19 +102,22 @@ module MasterMind
               'cyan'.bg_cyan,
               'white'.bg_white.black].join(' ')
         puts "** type your choice one at a time like so - 'red' + enter **"
-        player_guess_sequence
+        player_cipher_sequence
 
-        if @turns.zero?
-          puts 'Out of turns! You lost.'
-          break
-        elsif player_has_won?
-          puts "You guessed the cipher #{player.name}! Way to go!"
-          puts player.guesses.join
-          break
-        else
-          @turns -= 1
-          puts "Solid attempt. You have #{@turns} turn(s) left"
-          feedback(player.guesses)
+        loop do
+          computer_player.comp_choose_sequence(@temp_color_choice, computer_player.guesses)
+          if @turns.zero?
+            puts "#{player.name} won! Computer couldn't guess the cipher"
+            break
+          elsif computer_player_has_won?
+            puts 'Computer guessed the cipher! You lost'
+            puts computer_player.guesses.join
+            break
+          else
+            @turns -= 1
+            puts "Computer guessed #{computer_player.guesses.join}"
+            puts "Computer has #{@turns} attempt(s) left"
+          end
         end
       end
     end
@@ -96,6 +141,10 @@ module MasterMind
       @computer_cipher_sequence == player.guesses
     end
 
+    def computer_player_has_won?
+      player.cipher == computer_player.guesses
+    end
+
     def player_guess_text_to_color(guess)
       case guess
       when 'red'
@@ -116,11 +165,29 @@ module MasterMind
 
   class Player
     attr_reader :name
-    attr_accessor :guesses
+    attr_accessor :guesses, :cipher
 
     def initialize(name)
       @name = name
       @guesses = []
+      @cipher = []
+    end
+  end
+
+  def player_cipher_sequence
+    loop do
+      cipher = gets.chomp.downcase
+
+      if COLOR_CHOICES.any?(cipher)
+        player.cipher.push(player_guess_text_to_color(cipher))
+      else
+        puts 'Not one of the choices, try again'
+      end
+
+      if player.cipher.length == 4
+        puts "#{player.name}'s cipher: #{player.cipher.join}"
+        return
+      end
     end
   end
 
@@ -141,6 +208,20 @@ module MasterMind
   end
 
   class ComputerPlayer
+    attr_accessor :guesses
+
+    def initialize
+      @guesses = []
+    end
+
+    def comp_choose_sequence(colors, cipher)
+      editable_colors = colors.clone
+      4.times { cipher.push(editable_colors.delete_at(rand(editable_colors.length))) }
+    end
+
+    def computer_guess_sequence
+      self.guesses = comp_choose_sequence(@temp_color_choice, @guesses)
+    end
   end
 end
 
@@ -150,6 +231,7 @@ puts 'Welcome to Master Mind'
 puts 'What is your name?'
 player_name = gets.chomp
 
-player = Player.new(player_name)
+human = Player.new(player_name)
+comp = ComputerPlayer.new
 
-Game.new(player).play
+Game.new(human, comp).play
