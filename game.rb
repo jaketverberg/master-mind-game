@@ -103,9 +103,9 @@ module MasterMind
               'white'.bg_white.black].join(' ')
         puts "** type your choice one at a time like so - 'red' + enter **"
         player_cipher_sequence
+        computer_player.comp_choose_sequence(@temp_color_choice, computer_player.guesses)
 
         loop do
-          computer_player.comp_choose_sequence(@temp_color_choice, computer_player.guesses)
           if @turns.zero?
             puts "#{player.name} won! Computer couldn't guess the cipher"
             break
@@ -117,13 +117,11 @@ module MasterMind
             @turns -= 1
             puts "Computer guessed #{computer_player.guesses.join}"
             puts "Computer has #{@turns} attempt(s) left"
-            if player.cipher.any?(computer_player.guesses)
-              computer_player.guesses.each_with_index do |guess, index|
-                if color == player.cipher[index]
-                  next
-                else
-                  computer_player.guesses[index] = new_color_picker(computer_player.guesses[index])
-                end
+            computer_player.guesses.each_with_index do |guess, index|
+              if guess == player.cipher[index]
+                next
+              else
+                computer_player.guesses[index] = new_color_picker(computer_player.guesses[index])
               end
             end
           end
